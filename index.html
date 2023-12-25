@@ -6,8 +6,10 @@
     <title>Todo</title>
     <script>
 
+        let backEndUrl = "http://localhost:3000/"
+
         function deleteTodo(id){
-            fetch(`https://054e-103-61-255-54.ngrok-free.app/todos/${id}`, {method:"DELETE"}).then((resp)=>{
+            fetch(backEndUrl+`todos/${id}`, {method:"DELETE"}).then((resp)=>{
                 if(resp.status== 200){
                     console.log("delete successfully");
                     getData()
@@ -18,7 +20,7 @@
 
 
         function getData(){
-            fetch("https://054e-103-61-255-54.ngrok-free.app/todos/", {method:"GET"}).then((resp)=>{
+            fetch(backEndUrl+"todos/", {method:"GET"}).then((resp)=>{
                 resp.json().then((Todos)=>{
                     const container = document.querySelector("div.data")
                     container.innerHTML = ""
@@ -47,7 +49,7 @@
                 description: document.querySelector("#discription").value,
                 completed:false
             }
-            fetch("https://054e-103-61-255-54.ngrok-free.app/todos/", {
+            fetch(backEndUrl+"todos/", {
                 method:"POST",
                 body:JSON.stringify(body),
                 headers:{
