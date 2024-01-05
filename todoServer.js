@@ -1,112 +1,59 @@
 
 const express = require('express');
-const fs = require('fs');
-var bodyParser = require('body-parser')
-const path = require("path");
+const bodyParser = require('body-parser')
 const cors = require("cors");
-const { log } = require('console');
+const mongoose = require("mongoose");
 
-let todoData = {}
-//read and update the global variable todoData
+const TodoModel =  require('./models');
+
+const URI = "mongodb+srv://aman7015:aman7015@cluster0.wva3zeh.mongodb.net/?retryWrites=true&w=majority"; 
+
+mongoose.connect(URI, {dbName:"Todo"}).then(()=>{
+  app.listen(3000, ()=>{console.log("started at port 3000");})
+})
+
 
 const app = express();
 
 
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(express.static("public"));
 app.use(cors())
 
 
 //get all todos
-app.get('/todos', (req, res) => {
-  fs.readFile("data.json","utf-8",(err, data)=>{
-    if(err) throw err;
-    todoData = JSON.parse(data)
-    let arr = []
-    for(const id in todoData){
-      todoData[id]["id"] = +id;
-      arr.push(todoData[id]) 
-    }
-    res.send(arr)
-  })
+app.get('/todos', async (req, res) => {
+  const todos = await TodoModel.find({})
+  res.send(todos);
 })
 
 
 //adds todo in data body{title, description, completed} sends {id}
-app.post('/todos', (req, res)=>{
-  console.log(req.body);
-  let title = req.body.title;
-  let description = req.body.description;
-  let completed = req.body.completed;
-
-  fs.readFile("data.json","utf-8",(err, data)=>{
-    if(err) throw err;
-    todoData = JSON.parse(data)
-    var curID = Date.now();
-    todoData[curID] = {title,description,completed}
-    res.status(201).json({id:curID});
-    let dataStr = JSON.stringify(todoData)
-    fs.writeFile("data.json",dataStr,(err)=>{
-      if(err) throw err;
-    })
-  })
+app.post('/todos', async (req, res)=>{
+  let id = Date.now();
+  const newTodo = new TodoModel({...req.body,completed:false, id});  
+  console.log(newTodo);
+  await newTodo.save();
+  res.status(201).json({id})
 })
 
 //id in url body{ "completed": true } update todo[id]
-app.put('/todos/:id', (req, res)=>{
+app.put('/todos/:id', async(req, res)=>{
   let id = req.params.id;
-  fs.readFile("data.json","utf-8",(err, data)=>{
-    if(err) throw err;
-    todoData = JSON.parse(data)    
-    if (!!(id in todoData)) {
-      todoData[id].completed = req.body.completed;
-      let dataStr = JSON.stringify(todoData)
-      fs.writeFile("data.json",dataStr,(err)=>{
-        if(err) throw err;
-      })
-      res.send("updated")
-    }
-    else{
-      res.status(404).send("Not Found")
-    }    
-  })
+  let completed = req.body.completed;
+  await TodoModel.findOneAndUpdate({id}, {completed});
+  res.send("updated");
 })
-
 
 //delete a tody by its id;
-app.delete('/todos/:id', (req, res)=>{
+app.delete('/todos/:id', async(req, res)=>{
   let id = req.params.id;
-
-  fs.readFile("data.json","utf-8",(err, data)=>{
-    if(err) throw err;
-    todoData = JSON.parse(data)
-    console.log(id);   
-    if (!!(id in todoData)) {
-      delete todoData[id];
-      let dataStr = JSON.stringify(todoData)
-      fs.writeFile("data.json",dataStr,(err)=>{
-        if(err) throw err;
-      })
-      res.send("delete")
-      console.log("deleted OK");
-    }
-    else{
-      res.status(404).send("Not Found")
-    }    
-  })
+  await TodoModel.findOneAndDelete({id});
+  res.send("deleted")
 })
-
-
-// app.get("/",(req,res)=>{
-//   res.sendFile(path.join(__dirname, "index.html"));
-// })
 
 app.all("*",(req, res)=>{
   res.status(404).send("Route not found")
 })
 
-app.listen(3000, ()=>{console.log("started at port 3000");})
-
-
-// module.exports = app;
 
