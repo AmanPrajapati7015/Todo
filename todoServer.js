@@ -3,16 +3,18 @@ const express = require('express');
 const fs = require('fs');
 var bodyParser = require('body-parser')
 const path = require("path");
-const cors = require("cors")
+const cors = require("cors");
+const { log } = require('console');
 
 let todoData = {}
 //read and update the global variable todoData
 
 const app = express();
 
+
 app.use(bodyParser.json())
 app.use(express.static("public"));
-// app.use(cors())
+app.use(cors())
 
 
 //get all todos
@@ -40,7 +42,7 @@ app.post('/todos', (req, res)=>{
   fs.readFile("data.json","utf-8",(err, data)=>{
     if(err) throw err;
     todoData = JSON.parse(data)
-    var curID = Math.floor((Math.random() * 10000));
+    var curID = Date.now();
     todoData[curID] = {title,description,completed}
     res.status(201).json({id:curID});
     let dataStr = JSON.stringify(todoData)
@@ -50,26 +52,25 @@ app.post('/todos', (req, res)=>{
   })
 })
 
-//id in url body{"title": "Buy groceries", "completed": true } update todo[id]
-// app.put('/todos/:id', (req, res)=>{
-//   let id = req.params.id;
-//   fs.readFile("data.json","utf-8",(err, data)=>{
-//     if(err) throw err;
-//     todoData = JSON.parse(data)    
-//     if (!!(id in todoData)) {
-//       todoData[id].title = req.body.title;
-//       todoData[id].completed = req.body.completed;
-//       let dataStr = JSON.stringify(todoData)
-//       fs.writeFile("data.json",dataStr,(err)=>{
-//         if(err) throw err;
-//       })
-//       res.send("updated")
-//     }
-//     else{
-//       res.status(404).send("Not Found")
-//     }    
-//   })
-// })
+//id in url body{ "completed": true } update todo[id]
+app.put('/todos/:id', (req, res)=>{
+  let id = req.params.id;
+  fs.readFile("data.json","utf-8",(err, data)=>{
+    if(err) throw err;
+    todoData = JSON.parse(data)    
+    if (!!(id in todoData)) {
+      todoData[id].completed = req.body.completed;
+      let dataStr = JSON.stringify(todoData)
+      fs.writeFile("data.json",dataStr,(err)=>{
+        if(err) throw err;
+      })
+      res.send("updated")
+    }
+    else{
+      res.status(404).send("Not Found")
+    }    
+  })
+})
 
 
 //delete a tody by its id;
@@ -87,6 +88,7 @@ app.delete('/todos/:id', (req, res)=>{
         if(err) throw err;
       })
       res.send("delete")
+      console.log("deleted OK");
     }
     else{
       res.status(404).send("Not Found")

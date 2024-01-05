@@ -51,6 +51,9 @@ function send(){
     }).then((res)=>{
         document.querySelector("#title").value="";
         document.querySelector("#discription").value="";
+        res.json().then((data)=>{
+            console.log(data);
+        })
         getData();
     })
 }
