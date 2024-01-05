@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require("cors");
@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 const TodoModel =  require('./models');
 
-const URI = "mongodb+srv://aman7015:aman7015@cluster0.wva3zeh.mongodb.net/?retryWrites=true&w=majority"; 
+const URI = process.env.URI; 
 
 mongoose.connect(URI, {dbName:"Todo"}).then(()=>{
   app.listen(3000, ()=>{console.log("started at port 3000");})
