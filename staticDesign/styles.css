@@ -1,9 +1,14 @@
 *{
     margin: 0;
     padding: 0;
+    border: none;
+    background: none;
+    font-family:  Helvetica, sans-serif;
+    font-weight: 100;
 }
 
-div.inputs{
+div.inputs, div.todos{
+    box-sizing: border-box;
     max-width: 900px;
     margin: 50px auto;
     display: flex;
@@ -40,3 +45,45 @@ input#description{
 
 
 /* todo-container */
+div.todos{
+    background-color: #F1ECE6;
+    border-radius: 30px;
+    padding: 20px;
+}
+div.todos  .todo{
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+div.todos  .todo > details{
+    flex-grow: 1;
+}
+
+div.todos  .todo summary {
+    list-style: none;   
+}
+div.todos  .todo summary{
+    font-size: 1.6rem;
+}
+
+div.todos  .todo summary.done{
+    text-decoration:line-through;
+    color: rgb(73, 73, 73);
+}
+
+div.todos .todo img{
+    height: 30px;
+}
+.todo button:hover{
+    background-color: rgb(220, 220, 220);
+    border-radius: 15px;
+    cursor: pointer;
+}
+hr{
+    border-width: 1px;
+    border-color: #76B7CD;
+    border-top-style:solid;
+    width: 90%;
+    margin: auto;
+}
