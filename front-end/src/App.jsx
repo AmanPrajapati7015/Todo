@@ -89,11 +89,13 @@ function App() {
   return (
     <>
     <Input onAdd={handleAdd}/>
+    <div class="todos">
     {
     todos.map((todo)=>{
       return <Todo completed={todo.completed} title={todo.title} description={todo.description} todoId={todo.id} toggleStaus={handleToggle} onDelete={handleDelete}/>
     })
     }
+    </div>
     </>
   )
 }
@@ -102,10 +104,14 @@ function App() {
 function Input(props){
   return (
     <>
-    <div class="add-todo">
-    <input type="text" id="title" placeholder='Title' />
-    <input type="text" id="description" placeholder='Description...' />
-    <button onClick={()=>{props.onAdd()}}>Add Todo</button>
+    <div class="inputs">
+        <div class="row">
+            <input type="text" id="title" placeholder="Title" />
+            <button onClick={()=>{props.onAdd()}} >ADD</button>
+        </div>
+        <div class="row">
+            <input type="text" id="description" placeholder="Description"/>
+        </div>
     </div>
     </>
   )
@@ -114,14 +120,19 @@ function Input(props){
 function Todo(props){
   return(
     <>
-    <div class="todo" >
-      <p>{props.completed?"done":"Left"}</p>
-      <h3>{props.title}</h3>
-      <p>{props.description}</p>
-      <button onClick={()=>{props.toggleStaus(props.todoId)}}>Toggle Status</button>
-      <button onClick={()=>{props.onDelete(props.todoId)}} >Delete</button>
+    <div class="todo">
+      <button onClick={()=>{props.toggleStaus(props.todoId)}}>
+          <img class="todo-status" src={props.completed?"./src/assets/done.svg":"./src/assets/not-done.svg"} alt=""/>
+      </button>
+      <details>
+          <summary class={props.completed?"done":""}>{props.title}</summary>
+          <p>{props.description}</p>
+      </details>
+      <button onClick={()=>{props.onDelete(props.todoId)}} class="todo-delete">
+          <img src="./src/assets/delete.svg" alt=""/>
+      </button>
     </div>
-    <br/>
+    <hr/>  
     </>
   )
 }
