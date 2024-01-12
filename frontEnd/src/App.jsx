@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import Input from './Input.jsx'
 
 
 // let url = "https://todo-app-sx1g.onrender.com/todos"
@@ -42,9 +43,9 @@ function App() {
     })
   }
 
-  const handleAdd = ()=>{
-    let title = document.querySelector("#title").value;
-    let description = document.querySelector("#description").value;
+  const handleAdd = (todoTitle, todoDescription)=>{
+    let title = todoTitle;
+    let description = todoDescription;
     let body= { title, description, completed:false }
     fetch(url, {
         method:"POST",
@@ -71,7 +72,7 @@ function App() {
       headers:{"Content-Type":"application/json"}
       }).then(res=>{
         if(res.status == 200){
-          setTodos(todos.map(todo=>{
+          setTodos(todos.map((todo)=>{
             if(todo.id == id)
               todo.completed = !todo.completed
             return todo;
@@ -83,8 +84,8 @@ function App() {
 
   return (
     <>
-    <Input onAdd={handleAdd}/>
-    <div class="todos">
+    <Input onAdd={handleAdd} />
+    <div className="todos">
     {
     todos.map((todo)=>{
       return <Todo completed={todo.completed} title={todo.title} description={todo.description} todoId={todo.id} toggleStaus={handleToggle} onDelete={handleDelete}/>
@@ -96,34 +97,20 @@ function App() {
 }
 
 // componets....
-function Input(props){
-  return (
-    <>
-    <div class="inputs">
-        <div class="row">
-            <input type="text" id="title" placeholder="Title" />
-        </div>
-        <div class="row">
-            <input type="text" id="description" placeholder="Description"/>
-            <button onClick={()=>{props.onAdd()}} >ADD</button>
-        </div>
-    </div>
-    </>
-  )
-}
+
 
 function Todo(props){
   return(
     <>
-    <div class="todo">
+    <div className="todo">
       <button onClick={()=>{props.toggleStaus(props.todoId)}}>
-          <img class="todo-status" src={props.completed?"./src/assets/done.svg":"./src/assets/not-done.svg"} alt=""/>
+          <img className="todo-status" src={props.completed?"./src/assets/done.svg":"./src/assets/not-done.svg"} alt=""/>
       </button>
       <details>
-          <summary class={props.completed?"done":""}>{props.title}</summary>
+          <summary className={props.completed?"done":""}>{props.title}</summary>
           <p>{props.description}</p>
       </details>
-      <button onClick={()=>{props.onDelete(props.todoId)}} class="todo-delete">
+      <button onClick={()=>{props.onDelete(props.todoId)}} className="todo-delete">
           <img src="./src/assets/delete.svg" alt=""/>
       </button>
     </div>
