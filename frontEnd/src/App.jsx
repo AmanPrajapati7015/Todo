@@ -2,28 +2,23 @@ import React from 'react'
 import './App.css'
 
 
-
-// add to notes about useTodos (custom hooks)
+// let url = "https://todo-app-sx1g.onrender.com/todos"
+let url = "http://localhost:3000/todos/"
 
 //hook for main Todo State variable 
 function useTodos(){
   const [todos, setTodos] = React.useState([])
 
   React.useEffect(()=>{
-    fetch("http://localhost:3000/todos").then((resp)=>{
-        resp.json().then((data)=>{
-          setTodos(data)
-        })
-    })
-
-    // setInterval(()=>{
-    //   fetch("http://localhost:3000/todos").then((resp)=>{
-    //     resp.json().then((data)=>{
-    //       setTodos(data)
-    //     })
-    //   })
-    // },10000)
-
+    function fetchTodos() {
+      fetch(url).then((resp)=>{
+          resp.json().then((data)=>{
+            setTodos(data)
+          })
+      })
+    }
+    fetchTodos();
+    setInterval(fetchTodos,10000)
   },[]);
 
   return {todos, setTodos};
@@ -37,7 +32,7 @@ function App() {
   console.log("dom updated")
 
   const handleDelete = (id)=>{
-    fetch(`http://localhost:3000/todos/${id}`, {method:"DELETE"}).then((resp)=>{
+    fetch(url+id, {method:"DELETE"}).then((resp)=>{
       if(resp.status== 200){
         setTodos(todos.filter((todo)=>{          
           return todo.id !== id;
@@ -51,7 +46,7 @@ function App() {
     let title = document.querySelector("#title").value;
     let description = document.querySelector("#description").value;
     let body= { title, description, completed:false }
-    fetch("http://localhost:3000/todos/", {
+    fetch(url, {
         method:"POST",
         body:JSON.stringify(body),
         headers:{"Content-Type":"application/json"}
@@ -70,7 +65,7 @@ function App() {
   const handleToggle = (id)=>{
     let pickedTodo = todos.find((todo)=>{return todo.id==id})
     
-    fetch(`http://localhost:3000/todos/${id}`, {
+    fetch(url+id, {
       method:"PUT", 
       body:JSON.stringify({completed:!pickedTodo.completed}),
       headers:{"Content-Type":"application/json"}
@@ -107,10 +102,10 @@ function Input(props){
     <div class="inputs">
         <div class="row">
             <input type="text" id="title" placeholder="Title" />
-            <button onClick={()=>{props.onAdd()}} >ADD</button>
         </div>
         <div class="row">
             <input type="text" id="description" placeholder="Description"/>
+            <button onClick={()=>{props.onAdd()}} >ADD</button>
         </div>
     </div>
     </>

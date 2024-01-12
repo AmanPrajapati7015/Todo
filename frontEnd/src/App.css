@@ -23,7 +23,7 @@ div.inputs > .row >input{
     flex-grow: 1;
     background-color: #F1ECE6;
     border: none;
-    border-radius: 30px 0 0 30px;
+    border-radius: 30px ;
     font-size: 1.6rem;
     outline: none;
     padding: 15px 20px ;
@@ -39,7 +39,7 @@ div.inputs button{
     font-weight: 700;
 }
 input#description{
-    border-radius: 30px;
+    border-radius: 30px 0 0 30px;
 }
 
 
