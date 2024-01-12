@@ -7,6 +7,11 @@
     font-weight: 100;
 }
 
+body{
+    background-color: black;
+    color: white;
+}
+
 div.inputs, div.todos{
     box-sizing: border-box;
     max-width: 900px;
@@ -20,8 +25,10 @@ div.inputs > .row{
     /* gap: 10px; */
 }
 div.inputs > .row >input{
+    background-color: #2B2B2B;
+    color: white;
     flex-grow: 1;
-    background-color: #F1ECE6;
+    /* background-color: #F1ECE6; */
     border: none;
     border-radius: 30px ;
     font-size: 1.6rem;
@@ -46,7 +53,7 @@ input#description{
 
 /* todo-container */
 div.todos{
-    background-color: #F1ECE6;
+    background-color: #2B2B2B;
     border-radius: 30px;
     padding: 20px;
 }
@@ -76,8 +83,7 @@ div.todos .todo img{
     height: 30px;
 }
 .todo button:hover{
-    background-color: rgb(220, 220, 220);
-    border-radius: 15px;
+    background-color: rgb(34, 34, 34);
     cursor: pointer;
 }
 hr{
